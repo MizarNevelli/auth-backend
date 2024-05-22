@@ -1,6 +1,8 @@
-import Fastify from "fastify";
+import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import { userRoutes } from "./modules/user/user.route";
 import { userSchemas } from "./modules/user/user.schema";
+import fjwt, { FastifyJWT } from "@fastify/jwt";
+import fCookie from "@fastify/cookie";
 
 const app = Fastify({ logger: true }); // you can disable logging
 
@@ -31,3 +33,32 @@ app.get("/healthcheck", (req, res) => {
 for (let schema of [...userSchemas]) {
   app.addSchema(schema);
 }
+
+// jwt
+app.register(fjwt, { secret: "supersecretcode-CHANGE_THIS-USE_ENV_FILE" }); //TODO use env
+
+app.decorate(
+  "authenticate",
+  async (req: FastifyRequest, reply: FastifyReply) => {
+    const token = req.cookies.access_token;
+
+    if (!token)
+      return reply.status(401).send({ message: "Authentication required" });
+
+    // here decoded will be a different type by default but we want it to be of user-payload type
+    const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
+    req.user = decoded;
+  }
+);
+
+app.addHook("preHandler", (req, res, next) => {
+  // here we are
+  req.jwt = app.jwt;
+  return next();
+});
+
+// cookies
+app.register(fCookie, {
+  secret: "some-secret-key",
+  hook: "preHandler",
+});
