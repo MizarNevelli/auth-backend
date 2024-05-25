@@ -2,6 +2,8 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { CreateUserInput, LoginUserInput } from "./user.schema";
 import bcrypt from "bcrypt";
 import prisma from "../../utils/prisma";
+import { sendMail } from "../../utils/mailServices";
+import { registerMailTemplate } from "../../utils/mailTemplate";
 
 const SALT_ROUNDS = 10;
 
@@ -15,7 +17,8 @@ export async function createUser(
 
   if (!password || !email || !name)
     return reply.code(401).send({
-      message: "Name, Email and Password are required to register a new user.",
+      message:
+        "Username, Email and Password are required to register a new user.",
     });
 
   //TODO: SEND EMAIL TO VERIFY that can receive messages
@@ -30,6 +33,17 @@ export async function createUser(
     return reply.code(401).send({
       message: "User already exists with this email",
     });
+  }
+
+  if (process.env.MAIL_USERNAME) {
+    await sendMail(
+      process.env.MAIL_USERNAME,
+      email,
+      "Register new account",
+      registerMailTemplate(`${process.env.CLIENT_URL}/login`)
+    );
+  } else {
+    throw new Error("MAIL_USERNAME environment variable is not set");
   }
 
   try {

@@ -43,7 +43,18 @@ for (let schema of [...userSchemas]) {
 }
 
 // jwt
-app.register(fjwt, { secret: "supersecretcode-CHANGE_THIS-USE_ENV_FILE" }); //TODO use env
+app.register(fjwt, { secret: process.env.JWT_SECRET || "some-secret-key" }); // TODO use env
+
+app.addHook("preHandler", (req, res, next) => {
+  req.jwt = app.jwt;
+  return next();
+});
+
+// cookies
+app.register(fCookie, {
+  secret: process.env.COOKIE_SECRET || "some-secret-key", // TODO secret??
+  hook: "preHandler",
+});
 
 app.decorate(
   "authenticate",
@@ -58,14 +69,3 @@ app.decorate(
     req.user = decoded;
   }
 );
-
-app.addHook("preHandler", (req, res, next) => {
-  req.jwt = app.jwt;
-  return next();
-});
-
-// cookies
-app.register(fCookie, {
-  secret: "some-secret-key",
-  hook: "preHandler",
-});
