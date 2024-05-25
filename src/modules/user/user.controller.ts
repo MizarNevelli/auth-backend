@@ -13,15 +13,13 @@ export async function createUser(
   }>,
   reply: FastifyReply
 ) {
-  const { password, email, name } = req.body;
+  const { password, email, userName } = req.body;
 
-  if (!password || !email || !name)
+  if (!password || !email || !userName)
     return reply.code(401).send({
       message:
-        "Username, Email and Password are required to register a new user.",
+        "User Name, Email and Password are required to register a new user.",
     });
-
-  //TODO: SEND EMAIL TO VERIFY that can receive messages
 
   const user = await prisma.user.findUnique({
     where: {
@@ -36,6 +34,8 @@ export async function createUser(
   }
 
   if (process.env.MAIL_USERNAME) {
+    // TODO: How can i catch if the email does not receive the message ??
+    // a mail arrive to my process.env.MAIL_USERNAME explaining that the message cannot be sent
     await sendMail(
       process.env.MAIL_USERNAME,
       email,
@@ -53,7 +53,7 @@ export async function createUser(
       data: {
         password: hash,
         email,
-        name,
+        userName,
       },
     });
 
@@ -86,7 +86,7 @@ export async function login(
   const payload = {
     id: user.id,
     email: user.email,
-    name: user.name,
+    userName: user.userName,
   };
 
   const token = req.jwt.sign(payload);
@@ -97,13 +97,13 @@ export async function login(
     secure: true,
   });
 
-  return { accessToken: token };
+  return { ...payload, accessToken: token };
 }
 
 export async function getUsers(req: FastifyRequest, reply: FastifyReply) {
   const users = await prisma.user.findMany({
     select: {
-      name: true,
+      userName: true,
       id: true,
       email: true,
     },

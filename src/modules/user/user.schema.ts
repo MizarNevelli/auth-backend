@@ -5,7 +5,7 @@ import { buildJsonSchemas } from "fastify-zod";
 const createUserSchema = z.object({
   email: z.string(),
   password: z.string().min(6),
-  name: z.string(),
+  userName: z.string(),
 });
 
 //exporting the type to provide to the request Body
@@ -15,7 +15,7 @@ export type CreateUserInput = z.infer<typeof createUserSchema>;
 const createUserResponseSchema = z.object({
   id: z.string(),
   email: z.string(),
-  name: z.string(),
+  userName: z.string(),
 });
 
 // same for login route
