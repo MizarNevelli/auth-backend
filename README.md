@@ -2,13 +2,7 @@
 
 ## To run the project locally you need to set these env variables:
 
--DATABASE_URL
--MAIL_HOST
--MAIL_PASSWORD
--MAIL_USERNAME
--JWT_SECRET
--COOKIE_SECRET
--CLIENT_URL
+-DATABASE_URL, MAIL_HOST, MAIL_PASSWORD, MAIL_USERNAME, JWT_SECRET, COOKIE_SECRET, CLIENT_URL
 
 ## Then run these commands:
 
