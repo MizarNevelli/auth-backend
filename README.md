@@ -6,7 +6,7 @@
 
 ## Then run these commands:
 
-`npm i`\_\_
+`npm i` .
 ` npm run dev`
 
 ## To make a migration on prisma use this command (here you can name your migration anything, in this case, init)
