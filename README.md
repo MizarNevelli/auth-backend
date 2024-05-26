@@ -1,6 +1,6 @@
-## Get started
+# Get started
 
-# To run the project locally you need to set these env variables:
+## To run the project locally you need to set these env variables:
 
 -DATABASE_URL
 -MAIL_HOST
@@ -10,11 +10,11 @@
 -COOKIE_SECRET
 -CLIENT_URL
 
-# Then run these commands:
+## Then run these commands:
 
-- npm i
-- npm run dev
+`npm i`
+` npm run dev`
 
-# To make a migration on prisma use this command (here you can name your migration anything, in this case, init)
+## To make a migration on prisma use this command (here you can name your migration anything, in this case, init)
 
-- npm prisma migrate dev --name init
+`npm prisma migrate dev --name init`
