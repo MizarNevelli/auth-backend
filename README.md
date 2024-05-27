@@ -1,14 +1,13 @@
-## Get started
+## Introduction
 
-### To run the project locally you need to set these env variables:
+- This repo contains the backend routing for the registration and sign in system. It's developed with Fastify, Prisma and PostgreSQL
 
-- DATABASE_URL, MAIL_HOST, MAIL_PASSWORD, MAIL_USERNAME, JWT_SECRET, COOKIE_SECRET, CLIENT_URL
-
-### Then run these commands:
+### To get started Then run these commands:
 
 `npm i`<br>
+then<br>
 `npm run dev`
 
-### To make a migration on prisma use this command (here you can name your migration anything, in this case, init)
+### To make a migration on prisma use this command:
 
-`npx prisma migrate dev --name init`
+`npm run migrate`
