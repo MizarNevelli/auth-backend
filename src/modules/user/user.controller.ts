@@ -28,7 +28,7 @@ export async function createUser(
   });
 
   if (user) {
-    return reply.code(401).send({
+    return reply.code(409).send({
       message: "User already exists with this email",
     });
   }
