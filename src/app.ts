@@ -5,6 +5,7 @@ import fjwt, { FastifyJWT } from "@fastify/jwt";
 import fCookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import fastifyEnv from "@fastify/env";
+import { string } from "zod";
 
 const app = Fastify({ logger: true });
 
@@ -19,6 +20,29 @@ const schema = {
     "COOKIE_SECRET",
     "CLIENT_URL",
   ],
+  properties: {
+    DATABASE_URL: {
+      type: "string",
+    },
+    MAIL_HOST: {
+      type: "string",
+    },
+    MAIL_PASSWORD: {
+      type: "string",
+    },
+    MAIL_USERNAME: {
+      type: "string",
+    },
+    JWT_SECRET: {
+      type: "string",
+    },
+    COOKIE_SECRET: {
+      type: "string",
+    },
+    CLIENT_URL: {
+      type: "string",
+    },
+  },
 };
 
 const options = {
@@ -85,10 +109,14 @@ app.decorate(
     const token = req.cookies.access_token;
 
     if (!token)
-      return reply.status(403).send({ message: "Authentication required" });
+      return reply.status(401).send({ message: "Authentication required" });
 
-    // here decoded will be a different type by default but we want it to be of user-payload type
-    const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
-    req.user = decoded;
+    try {
+      // here decoded will be a different type by default but we want it to be of user-payload type
+      const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
+      req.user = decoded;
+    } catch (error) {
+      return reply.status(401).send({ message: "JWT is not verified" });
+    }
   }
 );
