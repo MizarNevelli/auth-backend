@@ -85,7 +85,7 @@ app.decorate(
     const token = req.cookies.access_token;
 
     if (!token)
-      return reply.status(499).send({ message: "Authentication required" });
+      return reply.status(403).send({ message: "Authentication required" });
 
     // here decoded will be a different type by default but we want it to be of user-payload type
     const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
