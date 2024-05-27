@@ -33,15 +33,6 @@ export async function createUser(
     });
   }
 
-  // TODO: catch if the email does not receive the message ??
-
-  await sendMail(
-    process.env.MAIL_USERNAME as string,
-    email,
-    "Register new account",
-    registerMailTemplate(`${process.env.CLIENT_URL}/login`)
-  );
-
   try {
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
 
@@ -52,6 +43,14 @@ export async function createUser(
         userName,
       },
     });
+
+    // TODO: catch if the email does not receive the message ??
+    await sendMail(
+      process.env.MAIL_USERNAME as string,
+      email,
+      "Register new account",
+      registerMailTemplate(`${process.env.CLIENT_URL}/login`)
+    );
 
     return reply.code(201).send(user);
   } catch (err) {
