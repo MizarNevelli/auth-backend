@@ -37,7 +37,7 @@ export async function userRoutes(app: FastifyInstance) {
     login
   );
 
-  app.delete("/logout", { preHandler: [app.authenticate] }, logout);
+  app.post("/logout", { preHandler: [app.authenticate] }, logout);
 
   app.log.info("user routes registered");
 }

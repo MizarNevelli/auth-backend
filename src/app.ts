@@ -4,8 +4,35 @@ import { userSchemas } from "./modules/user/user.schema";
 import fjwt, { FastifyJWT } from "@fastify/jwt";
 import fCookie from "@fastify/cookie";
 import cors from "@fastify/cors";
+import fastifyEnv from "@fastify/env";
 
-const app = Fastify({ logger: true }); // you can disable logging
+const app = Fastify({ logger: true });
+
+const schema = {
+  type: "object",
+  required: [
+    "DATABASE_URL",
+    "MAIL_HOST",
+    "MAIL_PASSWORD",
+    "MAIL_USERNAME",
+    "JWT_SECRET",
+    "COOKIE_SECRET",
+    "CLIENT_URL",
+  ],
+};
+
+const options = {
+  schema: schema,
+  dotenv: true,
+};
+
+app.register(fastifyEnv, options).ready(async (err) => {
+  if (err) {
+    console.error(err);
+    await app.close();
+    process.exit(0);
+  }
+});
 
 // graceful shutdown
 const listeners = ["SIGINT", "SIGTERM"];
@@ -17,21 +44,17 @@ listeners.forEach((signal) => {
   });
 });
 
-// routes
+// register routes
 app.register(userRoutes, { prefix: "api/users" });
 
 app.register(cors, {
   origin: "*",
 });
 
-async function main() {
-  await app.listen({
-    port: 8000,
-    host: "0.0.0.0",
-  });
-}
-
-main();
+app.listen({
+  port: 8000,
+  host: "0.0.0.0",
+});
 
 // test routing
 app.get("/healthcheck", (req, res) => {
@@ -43,7 +66,7 @@ for (let schema of [...userSchemas]) {
 }
 
 // jwt
-app.register(fjwt, { secret: process.env.JWT_SECRET || "some-secret-key" }); // TODO use env
+app.register(fjwt, { secret: process.env.JWT_SECRET as string });
 
 app.addHook("preHandler", (req, res, next) => {
   req.jwt = app.jwt;
@@ -52,7 +75,7 @@ app.addHook("preHandler", (req, res, next) => {
 
 // cookies
 app.register(fCookie, {
-  secret: process.env.COOKIE_SECRET || "some-secret-key", // TODO secret??
+  secret: process.env.COOKIE_SECRET as string,
   hook: "preHandler",
 });
 

@@ -33,18 +33,14 @@ export async function createUser(
     });
   }
 
-  if (process.env.MAIL_USERNAME) {
-    // TODO: How can i catch if the email does not receive the message ??
-    // a mail arrive to my process.env.MAIL_USERNAME explaining that the message cannot be sent
-    await sendMail(
-      process.env.MAIL_USERNAME,
-      email,
-      "Register new account",
-      registerMailTemplate(`${process.env.CLIENT_URL}/login`)
-    );
-  } else {
-    throw new Error("MAIL_USERNAME environment variable is not set");
-  }
+  // TODO: catch if the email does not receive the message ??
+
+  await sendMail(
+    process.env.MAIL_USERNAME as string,
+    email,
+    "Register new account",
+    registerMailTemplate(`${process.env.CLIENT_URL}/login`)
+  );
 
   try {
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -70,10 +66,7 @@ export async function login(
   reply: FastifyReply
 ) {
   const { email, password } = req.body;
-  /*
-   MAKE SURE TO VALIDATE (according to you needs) user data
-   before performing the db query
-  */
+
   const user = await prisma.user.findUnique({ where: { email: email } });
   const isMatch = user && (await bcrypt.compare(password, user.password));
 
