@@ -15,12 +15,6 @@ export async function createUser(
 ) {
   const { password, email, userName } = req.body;
 
-  if (!password || !email || !userName)
-    return reply.code(401).send({
-      message:
-        "User Name, Email and Password are required to register a new user.",
-    });
-
   const user = await prisma.user.findUnique({
     where: {
       email: email,
