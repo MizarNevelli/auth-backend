@@ -51,9 +51,11 @@ export async function createUser(
       "Register new account",
       registerMailTemplate(`${process.env.CLIENT_URL}/login`),
       (error, info) => {
-        if (error)
+        if (error) {
           console.error("There was an error sending the email: ", error);
-        console.info("Email sent: ", info.response);
+        } else {
+          console.info("Email sent: ", info.response);
+        }
       }
     );
 
