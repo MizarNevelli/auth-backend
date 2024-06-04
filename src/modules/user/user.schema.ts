@@ -3,9 +3,9 @@ import { buildJsonSchemas } from "fastify-zod";
 
 // data that we need from user to register
 const createUserSchema = z.object({
-  email: z.string(),
+  email: z.string().min(5).email(),
   password: z.string().min(6),
-  userName: z.string(),
+  userName: z.string().min(1),
 });
 
 //exporting the type to provide to the request Body
