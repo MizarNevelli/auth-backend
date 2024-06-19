@@ -19,4 +19,5 @@ model User {
   userName String?
   password String
   active Boolean @default(false)
+  createdAt DateTime @default(now())
 }

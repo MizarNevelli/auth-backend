@@ -5,7 +5,7 @@ import fjwt, { FastifyJWT } from "@fastify/jwt";
 import fCookie from "@fastify/cookie";
 import cors from "@fastify/cors";
 import fastifyEnv from "@fastify/env";
-import { string } from "zod";
+import cron from "./utils/cron";
 
 const app = Fastify({ logger: true });
 
@@ -79,6 +79,8 @@ app.listen({
   port: 8000,
   host: "0.0.0.0",
 });
+
+cron;
 
 // test routing
 app.get("/healthcheck", (req, res) => {
