@@ -1,6 +1,12 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { FastifyInstance } from "fastify";
 import { $ref } from "./user.schema";
-import { createUser, getUsers, login, logout } from "./user.controller";
+import {
+  checkToken,
+  createUser,
+  getUsers,
+  login,
+  logout,
+} from "./user.controller";
 
 export async function userRoutes(app: FastifyInstance) {
   app.get(
@@ -36,6 +42,8 @@ export async function userRoutes(app: FastifyInstance) {
     },
     login
   );
+
+  app.get("/auth", checkToken);
 
   app.post("/logout", { preHandler: [app.authenticate] }, logout);
 
