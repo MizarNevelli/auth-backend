@@ -1,4 +1,5 @@
 import { JWT } from "@fastify/jwt";
+import { FastifyRequest } from "fastify";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -19,4 +20,12 @@ declare module "@fastify/jwt" {
   interface FastifyJWT {
     user: UserPayload;
   }
+}
+
+export type MyRequest = FastifyRequest<{
+  Querystring: { token: string };
+}>;
+
+export interface DecodedJwt {
+  user: string;
 }
