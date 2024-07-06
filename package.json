@@ -21,12 +21,14 @@
     "bcrypt": "^5.1.1",
     "fastify": "^4.27.0",
     "fastify-zod": "^1.4.0",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.13",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.12.12",
+    "@types/node-cron": "^3.0.11",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5"
   }
